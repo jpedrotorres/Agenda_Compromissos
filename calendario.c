@@ -5,10 +5,21 @@
 void printMenu();
 void estruturaCalendario();
 void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]);
-void calendarioAgendamento(int agendamentos[], int tam);
 int inserirAgendamento(int agendamentos[], int diaMeses[]);
 
 int main() {
+/*
+        Função principal, na qual será interpretada pelo compilador. Lê do
+        usuário o dia da semana que cai o primeiro dia do ano em questão e
+        armazena na variável diaSemana e pergunta se o ano é bisexto ou não,
+        e armazena na váriável anoBisexto. Esses dados são para a criação do
+        calendário, que poderá ser usado pelas funções mostraCalendario ou
+        estruturaCalendario. Ainda, aqui é alocado uma parte da memória,
+        estaticamente, para armazenar os vetores que contém os dias do ano e
+        os agendamentos de cada dia. Nesta função contém um looping de menu
+        para o usuário escolher a opção que deseja acessar.
+*/
+
 	int opcMenu, diaSemana, agendamentos[nDiasAno], diasAno[nDiasAno];
 	int diaMeses[nMeses] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	char anoBisexto;
@@ -61,6 +72,16 @@ int main() {
 }
 
 void printMenu() {
+/*
+        Função responsável apenas por printar o menu na tela, assim que chamado.
+        Por definição, a função mostrará as opções: mostrar o calendário, ou seja,
+        calendário do ano atual, com os dias e semanas dos meses; inserir
+        agendamento, ou seja, opção para o usuário inserir o agendamento do cliente;
+        calendário com agendamentos, ou seja, a estrutura do calendário porém com as
+        informações da quantidade de agendamentos que determinado dia possui; e
+        por fim, a opção para sair e encerrar a operação.
+*/
+
 	printf("-----------------------------------------\n");
 	printf("|		Menu ASM		|\n");
 	printf("-----------------------------------------\n");
@@ -72,6 +93,26 @@ void printMenu() {
 }
 
 void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
+/*
+        Função responsável por criar e estruturar um calendário, ou seja, dar o
+        formato visual adequado e mostrar na tela o resultado, assim que chamado.
+        A função poderá mostrar o calendário normal, com os dias de cada mes, ou
+        o calendário com agendamentos, com o número de agendamentos que o usuário
+        possui em determinado dia. Nesta função é criado um vetor de strings para
+        armazenar o nome de cada mês (usado para imprimir os calendários). Também
+        são criados três variáveis do tipo inteiro para servir como contadores e
+        auxiliar no desenvolvimento das funcionalidades. Parâmetros:
+        diaSemana- inteiro que contém o dia da semana, dada em número (1-domingo,
+        2-segunda, entre outros), para auxiliar na criação do calendário;
+        diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
+        dias que um determinado mês possui;
+        vetorMostrar- vetor de inteiros que será interpretado pelo função e fará
+        parte do calendário a ser imprimido. O parâmetro pode ser um vetor que
+        contêm os dias do ano (para quando for solicitado mostrar o calendário) ou
+        um vetor que contém a quantidade de agendamentos de cada dia (para quando
+        for solicitado mostrar o calendário de agendamentos).
+*/
+
 	char nomeMes[nMeses][9]= {{"Janeiro"}, {"Fevereiro"}, {"Março"}, {"Abril"}, {"Maio"}, {"Junho"}, {"Julho"}, {"Agosto"}, {"Setembro"}, {"Outubro"}, {"Novembro"}, {"Dezembro"}};
 	int i, quebraLinha, varAux= 0;
 
@@ -104,6 +145,25 @@ void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
 }
 
 void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]) {
+/*
+        Função intermediária para mostrar na tela o calendário de dias do ano.
+        Essa função é responsável por armazenar os dias do ano em um vetor
+        dado, ou seja, na posição zero terá o número 1, na posição 1, o número
+        2, na posição 31, terá o número 1, e assim sucessivamente. Após
+        armazenar os dias do ano no vetor, essa função chama a outra função
+        estruturaCalendario, para assim, mostrar na tela o calendário normal.
+        Aqui, é criada a variável varAux, do tipo inteiro que se inicia em zero,
+        para auxiliar no desenvolvimento das funcionalidades. mostraCalendario
+        recebe como parâmetros:
+        diaSemana- inteiro que contém o dia da semana, dada em número, para
+        auxiliar na criação do calendário. Esse parâmetro não é utilizado na
+        função, mas é necessário para ser usado como parâmetro de outra função;
+        diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
+        dias que um determinado mês possui;
+        diasAno- vetor de inteiros que irá armazenar os dias do ano. Esse vetor
+        é passado vazio e durante a execução, será modificado e preenchido.
+*/
+
 	int varAux=0;
 
 	for(int j=0; j<nMeses; j++) {
@@ -117,13 +177,23 @@ void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]) {
 	estruturaCalendario(diaSemana, diaMeses, diasAno);
 }
 
-void calendarioAgendamento(int agendamentos[], int tam) {
-	for(int i=0; i<tam; i++) printf("%d ", agendamentos[i]);
-
-	printf("\n\n");
-}
-
 int inserirAgendamento(int agendamentos[], int diaMeses[]) {
+/*
+        Função responsável por inserir os agendamentos no vetor que armazena a
+        contagem de trabalhos em um dia. Essa, leva em consideração que o cliente
+        só atua em no máximo 5 trabalhos por dia, portanto, caso em um certo dia já
+        tenha completado o número máximo, a função mostrará na tela uma mensagem de
+        erro ao tentar encaixar um horário e tentará encaixar no próximo dia que há
+        um espaço. Durante a execução, a função solicita ao usuário o dia que
+        pretende iniciar o tratamento, o mês (dado em número) e a duração (dada em
+        número de dias). Também é criada a variável do tipo inteiro varAux para
+        servir de contador e auxiliar no desenvolvimento da função. Parâmetros:
+        agendamentos- vetor de inteiros que irá receber a quantidade de agendamentos
+        de um dia, assumindo que cada posição do vetor corresponde a um dia do ano;
+        diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
+        dias que um determinado mês possui.
+*/
+
 	int diaInicio, mesInicio, duracaoTratamento, varAux=0;
 
 	printf("Digite o dia do mês que pretende iniciar o tratamento: ");
