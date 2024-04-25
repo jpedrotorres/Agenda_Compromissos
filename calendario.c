@@ -1,8 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 #define nDiasAno 366
 #define nMeses 12
+#define maxAgendamento 5
 
 void printMenu();
+void printInformacaoInicial();
 void estruturaCalendario();
 void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]);
 int inserirAgendamento(int agendamentos[], int diaMeses[]);
@@ -26,9 +30,11 @@ int main() {
 
 	for(int i=0; i<nDiasAno; i++) agendamentos[i] = 0;
 
+	system("clear");
+
 	printf("Bem vindo ao sistema de agendamento ASM\n\n");//Agendamento Super Moderno
-	printf("Antes de iniciarmos, por favor informe as solicitações abaixo.\n");
-	printf("\nPara responder o item a seguir, considere:\nDomingo- 1;\nSegunda- 2;\nTerça- 3;\nQuarta- 4;\nQuinta- 5;\nSexta- 6;\nSábado- 7.\n\n");
+
+	printInformacaoInicial();
 
 	printf("Em que dia da semana cai 1º de janeiro? ");
 	scanf("%d", &diaSemana);
@@ -38,6 +44,8 @@ int main() {
 	scanf("%c", &anoBisexto);
 
 	if (anoBisexto == 's' || anoBisexto == 'S') diaMeses[1]= 29;
+
+	system("clear");
 
 	do {
 		printMenu();
@@ -59,6 +67,10 @@ int main() {
 				break;
 
 			case 4:
+				system("clear");
+				break;
+
+			case 5:
 				printf("\nAté logo!\n");
 				break;
 
@@ -66,7 +78,7 @@ int main() {
 				printf("Opção inválida. Por favor, selecione a opção corretamente\n");
 		}
 
-	} while(opcMenu != 4);
+	} while(opcMenu != 5);
 
 	return 0;
 }
@@ -88,8 +100,31 @@ void printMenu() {
 	printf("|	(1) Mostrar calendário		|\n");
 	printf("|	(2) Inserir agendamento		|\n");
 	printf("|	(3) Calendário com agendamentos	|\n");
-	printf("|	(4) Sair			|\n");
+	printf("|	(4) Limpar a tela		|\n");
+	printf("|	(5) Sair			|\n");
 	printf("-----------------------------------------\n");
+}
+
+void printInformacaoInicial() {
+/*
+	Função responsável por mostrar na tela do usuário uma tabela para auxilia-lo
+	a responder sobre o dia da semana. Nota-se que nessa etapa, uma solução mais
+	natural seria ler do usuário a palavra (string) que corresponde ao dia
+	solicitado, porém, preferiu-se utilizar uma representação numérica para
+	facilitar o código.
+*/
+	printf("Antes de iniciarmos, por favor informe as solicitações abaixo.\n\n");
+
+	printf("Para continuar, considere:\n");
+	printf("---------------------------------\n");
+	printf("|	(1) Domingo 		|\n");
+	printf("|	(2) Segunda-feira	|\n");
+	printf("|	(3) Terça-feira		|\n");
+	printf("|	(4) Quarta-feira	|\n");
+	printf("|	(5) Quinta-feira	|\n");
+	printf("|	(6) Sexta-feira		|\n");
+	printf("|	(7) Sábado		|\n");
+	printf("---------------------------------\n\n");
 }
 
 void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
@@ -119,7 +154,7 @@ void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
 	quebraLinha= diaSemana-1;
 
 	for(int j= 0; j<nMeses; j++) {
-		printf("\t%s\n", nomeMes[j]);
+		printf("\n\t%s\n", nomeMes[j]);
 
 		printf("	dom	seg	ter	qua	qui	sex	sab\n");
 
@@ -216,7 +251,7 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 	else varAux= diaInicio -1;
 
 	for(int i=0; i< duracaoTratamento; i++) {
-		if(agendamentos[varAux] == 5) {
+		if(agendamentos[varAux] == maxAgendamento) {
 			printf("Não foi possível agendar a consulta para um dos dias selecionados\n");
 		}
 
