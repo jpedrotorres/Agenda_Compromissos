@@ -9,6 +9,7 @@ void printMenu();
 void printInformacaoInicial();
 void estruturaCalendario();
 void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]);
+int verificaDiaMes (int dia, int mes, int diaMeses[]);
 int inserirAgendamento(int agendamentos[], int diaMeses[]);
 
 int main() {
@@ -135,8 +136,8 @@ void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
         o calendário com agendamentos, com o número de agendamentos que o usuário
         possui em determinado dia. Nesta função é criado um vetor de strings para
         armazenar o nome de cada mês (usado para imprimir os calendários). Também
-        são criados três variáveis do tipo inteiro para servir como contadores e
-        auxiliar no desenvolvimento das funcionalidades. Parâmetros:
+        são criados três variáveis do tipo inteiro para servir de contador ou
+	acumulador, para auxiliar no desenvolvimento das funcionalidades. Parâmetros:
         diaSemana- inteiro que contém o dia da semana, dada em número (1-domingo,
         2-segunda, entre outros), para auxiliar na criação do calendário;
         diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
@@ -212,6 +213,63 @@ void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]) {
 	estruturaCalendario(diaSemana, diaMeses, diasAno);
 }
 
+int verificaDiaMes (int dia, int mes, int diaMeses[]) {
+/*
+	Função responsável por verificar se o dia e mês digitado é verdadeiro
+	ou não. Caso a data informada esteja coerente, a função retornará 1,
+	caso contrário, retornará 0. Parâmetros:
+	dia- inteiro que contém a informação do dia que o usuário desejará
+	iniciar o tratamento;
+	mes- inteiro que contém a informação do mês que o usuário desejará
+	iniciar o tratamento;
+	diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
+        dias que um determinado mês possui.
+*/
+
+	if(mes <1 || mes >12) return 0;
+
+	if(dia <1 || dia > diaMeses[mes-1]) return 0;
+
+	return 1;
+}
+
+void printDiaSeparadoBarra (int dia, int mes, int intervalo, int diaMeses[]) {
+/*
+	Função responsável por mostrar na tela a data formatada no padrão separado
+	por barras. A função também calcula a nova data, para o caso de considerar
+	o intervalo de dias do tratamento. Parâmetros:
+	dia- inteiro que contém a informação do dia que o usuário desejará
+	iniciar o tratamento;
+	mes- inteiro que contém a informação do mês que o usuário desejará
+	iniciar o tratamento;
+	intervalo- inteiro que contém a informação do intervalo de tempo, em dias,
+	que o tratamento durará;
+	diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
+        dias que um determinado mês possui.
+*/
+
+	if(intervalo == 0) printf("%02d/%02d", dia, mes);
+
+	else {
+		int novoDia, novoMes, duracao;
+
+		novoMes= mes;
+		duracao= dia + intervalo;
+
+		if (duracao > diaMeses[mes -1]) {
+			while (duracao > diaMeses[mes -1]) {
+				novoMes++;
+
+				duracao-=diaMeses[mes -1];
+			}
+		}
+
+		novoDia= duracao;
+
+		printf("%02d/%02d", novoDia, novoMes);
+	}
+}
+
 int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 /*
         Função responsável por inserir os agendamentos no vetor que armazena a
@@ -219,26 +277,49 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
         só atua em no máximo 5 trabalhos por dia, portanto, caso em um certo dia já
         tenha completado o número máximo, a função mostrará na tela uma mensagem de
         erro ao tentar encaixar um horário e tentará encaixar no próximo dia que há
-        um espaço. Durante a execução, a função solicita ao usuário o dia que
-        pretende iniciar o tratamento, o mês (dado em número) e a duração (dada em
-        número de dias). Também é criada a variável do tipo inteiro varAux para
-        servir de contador e auxiliar no desenvolvimento da função. Parâmetros:
-        agendamentos- vetor de inteiros que irá receber a quantidade de agendamentos
-        de um dia, assumindo que cada posição do vetor corresponde a um dia do ano;
-        diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
-        dias que um determinado mês possui.
+        um espaço. Durante a execução, a função solicita ao usuário o dia que pretende
+	iniciar o tratamento, o mês (dado em número) e a duração (dada em número de
+	dias), que está contida dentro de um looping para, evitar erros de digitação,
+	que será conferido pela função verificaDiaMes e reafirmada ao usuário após
+	preencher as informações solicitadas. Também é criada a variável do tipo
+	inteiro varAux e loopingDia para servir de contador e auxiliar no
+	desenvolvimento da função. Parâmetros:
+	agendamentos- vetor de inteiros que irá receber a quantidade de agendamentos
+	de um dia, assumindo que cada posição do vetor corresponde a um dia do ano;
+	diaMeses- vetor de inteiros que armazena em cada posição a quantidade de
+	dias que um determinado mês possui.
 */
 
-	int diaInicio, mesInicio, duracaoTratamento, varAux=0;
+	int diaInicio, mesInicio, duracaoTratamento, varAux=0, loopingDia=1;
+	char opcCorreta;
 
-	printf("Digite o dia do mês que pretende iniciar o tratamento: ");
-	scanf("%d", &diaInicio);
+	do {
+		printf("\n\nDigite o dia do mês que pretende iniciar o tratamento: ");
+		scanf("%d", &diaInicio);
 
-	printf("Digite o mês (em número) que iniciará o tratamento (ex: 3, para representar março): ");
-	scanf("%d", &mesInicio);
+		printf("Digite o mês (em número) que iniciará o tratamento (ex: 3, para representar março): ");
+		scanf("%d", &mesInicio);
 
-	printf("Digite a duração (em dias) que o tratamento durará: ");
-	scanf("%d", &duracaoTratamento);
+		loopingDia= verificaDiaMes(diaInicio, mesInicio, diaMeses);
+
+		if (loopingDia) {
+			printf("Digite a duração (em dias) que o tratamento durará: ");
+			scanf("%d", &duracaoTratamento);
+
+			printf("\nO tratamento ocorrerá entre os dias ");
+			printDiaSeparadoBarra(diaInicio, mesInicio, 0, diaMeses);
+			printf(" - ");
+			printDiaSeparadoBarra(diaInicio, mesInicio, duracaoTratamento-1, diaMeses);
+			printf(". Deseja continuar?(s/n) ");
+			__fpurge(stdin);
+			scanf("%c", &opcCorreta);
+
+			if(opcCorreta== 'n' || opcCorreta== 'N') loopingDia= 0;
+		}
+
+		else printf("Por favor, preencha o campo de dia e mês novamente!\n\n");
+
+	} while(!loopingDia);
 
 	if(mesInicio -1 !=0) {
 		for (int i=0; i< (mesInicio -1); i++) {
