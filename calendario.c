@@ -154,6 +154,7 @@ void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
 	char nomeMes[nMeses][9]= {{"Janeiro"}, {"Fevereiro"}, {"Março"}, {"Abril"}, {"Maio"}, {"Junho"}, {"Julho"}, {"Agosto"}, {"Setembro"}, {"Outubro"}, {"Novembro"}, {"Dezembro"}};
 	int i, quebraLinha, varAux= 0;
 
+	//acumulador para controlar o dia da semana e formatar o print (min: 0; max: 7)
 	quebraLinha= diaSemana-1;
 
 	for(int j= 0; j<nMeses; j++) {
@@ -161,11 +162,13 @@ void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
 
 		printf("	dom	seg	ter	qua	qui	sex	sab\n");
 
+		//looping responsável por adicionar o TAB ao calendário (formatação)
 		for(i=0; i<diaSemana; i++) printf("\t");
 
 		for(i=0; i<diaMeses[j]; i++) {
 			quebraLinha++;
 
+			//printar o dia do mês (ou qtd de agendamentos em um dia)
 			printf("%02d\t", vetorMostrar[varAux]);
 
 			if(quebraLinha == 7) {
@@ -176,6 +179,7 @@ void estruturaCalendario(int diaSemana, int diaMeses[], int vetorMostrar[]) {
 			varAux++;
 		}
 
+		//atualizando o dia da semana que inicia o mês
 		diaSemana= quebraLinha+1;
 
 		printf("\n\n");
@@ -204,6 +208,7 @@ void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]) {
 
 	int varAux=0;
 
+	//preenchendo vetor diasAno
 	for(int j=0; j<nMeses; j++) {
 		for(int i=0; i< diaMeses[j]; i++) {
 			diasAno[varAux]= i+1;
@@ -212,6 +217,7 @@ void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]) {
 		}
 	}
 
+	//mostrando na tela o calendário
 	estruturaCalendario(diaSemana, diaMeses, diasAno);
 }
 
@@ -259,6 +265,7 @@ void printDiaSeparadoBarra (int dia, int mes, int intervalo, int diaMeses[]) {
 		duracao= dia + intervalo;
 
 		if (duracao > diaMeses[mes -1]) {
+			//atualizando o dia para o mês certo
 			while (duracao > diaMeses[mes -1]) {
 				novoMes++;
 
@@ -312,6 +319,7 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 	int diaInicio, mesInicio, duracaoTratamento, varAux=0, loopingDia;
 	char opcCorreta;
 
+	//looping para adicionar as informações do agendamento corretamente
 	do {
 		printf("\n\nDigite o dia do mês que pretende iniciar o tratamento: ");
 		scanf("%d", &diaInicio);
@@ -325,10 +333,16 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 			printf("Digite a duração (em dias) que o tratamento durará: ");
 			scanf("%d", &duracaoTratamento);
 
+			//confirmando ao usuário os dias escolhidos
 			printf("\nO tratamento ocorrerá entre os dias ");
 			printDiaSeparadoBarra(diaInicio, mesInicio, 0, diaMeses);
 			printf(" - ");
+
+			//duracaoTratamento-1: considerar que o dia especificado é contado
+			//como um dia de tratamento
 			printDiaSeparadoBarra(diaInicio, mesInicio, duracaoTratamento-1, diaMeses);
+
+			//verificando se as informações procedem, para continuar o agendamento
 			printf(". Deseja continuar?(s/n) ");
 			__fpurge(stdin);
 			scanf("%c", &opcCorreta);
@@ -340,6 +354,9 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 
 	} while(!loopingDia);
 
+	//varAux: armazenar a posição do dia especificado no vetor
+	//caso o mês do início do tratamento não seja janeiro, varAux também acumula os
+	//dias dos meses anteriores
 	if(mesInicio -1 !=0) {
 		for (int i=0; i< (mesInicio -1); i++) {
 			varAux+= diaMeses[i];
@@ -350,12 +367,17 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 
 	else varAux= diaInicio -1;
 
+	//preeche vetor com a qtd de agendamentos
 	for(int i=0; i< duracaoTratamento; i++) {
+		//variável de controle para ajudar no agendamento
 		opcCorreta= 's';
 
+		//verifica se o dia especificado já está cheio
 		if(!verificaAgendamento(agendamentos[varAux])) {
 			int j=0;
 
+			//acumula o intervalo de dias que há entre o dado dia e o dia com
+			//agendamento disponível (primeiro)
 			while(verificaAgendamento(agendamentos[varAux+j])==0) j++;
 
 			printf("\n!!! Não foi possível agendar a consulta para o dia ");
@@ -371,6 +393,7 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 			if(opcCorreta== 's' || opcCorreta== 'S') varAux+= j;
 		}
 
+		//atualiza o vetor de agendamentos
 		if(opcCorreta== 's' || opcCorreta== 'S') agendamentos[varAux]++;
 
 		varAux++;
