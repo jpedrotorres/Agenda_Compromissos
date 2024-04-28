@@ -15,8 +15,11 @@ Para dar início ao trabalho é solicitado o dia da semana que o ano de interess
 Como exigido, o programa permite visualizar o calendário (de dias) do ano especificado, inserir um agendamento e visualizar o calendário de agendamentos, que contém a quantidade de agendamentos em cada dia. Adicionalmente, foi adicionado uma função para remover um agendamento.
 
 :heavy_check_mark: mostrarCalendario- Função responsável por criar um vetor para mostrar o calendário de dias na tela;
+
 :heavy_check_mark: inserirAgendamento- Função responsável por inserir os agendamentos no vetor designado;
+
 :heavy_check_mark: estruturaCalendario- função responsável por mostrar os calendários na tela, seja o de dias ou de agendamentos (depende do vetor passado);
+
 :heavy_check_mark: removerAgendamento- Função responsável por remover um agendamento de um dia especificado.
 
 ## Considerações
@@ -29,6 +32,6 @@ Deixo aqui como recomendação para atualizações, a adição da biblioteca tim
 
 ## Desenvolvedor
 <p>
-	<img alt= "icone do desenvolvedor" src= "https://github.com/jpedrotorres.png">
+	<img alt= "icone do desenvolvedor" src= "https://github.com/jpedrotorres.png" height= "150px"><br>
 	<a href= "https://github.com/jpedrotorres" target= "_blank">João Pedro Torres</a>
 </p>
