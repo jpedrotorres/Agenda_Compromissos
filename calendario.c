@@ -13,6 +13,7 @@ int verificaDiaMes (int dia, int mes, int diaMeses[]);
 void printDiaSeparadoBarra (int dia, int mes, int intervalo, int diaMeses[]);
 int verificaAgendamento (int qtdAgendamento);
 int inserirAgendamento(int agendamentos[], int diaMeses[]);
+int removerAgendamento (int agendamentos[], int diaMeses[]);
 
 int main() {
 /*
@@ -31,6 +32,7 @@ int main() {
 	int diaMeses[nMeses] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	char anoBisexto;
 
+	//preenche vetor agendamentos com 0
 	for(int i=0; i<nDiasAno; i++) agendamentos[i] = 0;
 
 	system("clear");
@@ -70,18 +72,22 @@ int main() {
 				break;
 
 			case 4:
-				system("clear");
+				removerAgendamento(agendamentos, diaMeses);
 				break;
 
 			case 5:
-				printf("\nAté logo!\n");
+				system("clear");
 				break;
+
+			case 6:
+				printf("\nAté logo!\n");
+				return 0;
 
 			default:
 				printf("Opção inválida. Por favor, selecione a opção corretamente\n");
 		}
 
-	} while(opcMenu != 5);
+	} while(opcMenu != 6);
 
 	return 0;
 }
@@ -103,8 +109,9 @@ void printMenu() {
 	printf("|	(1) Mostrar calendário		|\n");
 	printf("|	(2) Inserir agendamento		|\n");
 	printf("|	(3) Calendário com agendamentos	|\n");
-	printf("|	(4) Limpar a tela		|\n");
-	printf("|	(5) Sair			|\n");
+	printf("|	(4) Remover agendamento		|\n");
+	printf("|	(5) Limpar a tela		|\n");
+	printf("|	(6) Sair			|\n");
 	printf("-----------------------------------------\n");
 }
 
@@ -398,6 +405,61 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 
 		varAux++;
 	}
+
+	return 0;
+}
+
+int removerAgendamento (int agendamentos[], int diaMeses[]) {
+/*
+	Função responsável por remover um agendamento de um dado dia. Para mais
+	detalhes, visite a função inserirAgendamento, pois apresenta um funcionamento
+	bastante semelhante.
+*/
+
+	int removeDia, removeMes, loopingDia, varAux=0;
+	char opcCorreta;
+
+	do {
+		printf("Digite o dia que deseja remover UM agendamento: ");
+		scanf("%d", &removeDia);
+
+		printf("Digite o número do mês que deseja remover o agendamento: ");
+		scanf("%d", &removeMes);
+
+		loopingDia= verificaDiaMes(removeDia, removeMes, diaMeses);
+
+		if (loopingDia) {
+			printf("Você realmente deseja remover UM agendamento do dia ");
+			printDiaSeparadoBarra(removeDia, removeMes, 0, diaMeses);
+			printf("?(s/n) ");
+			__fpurge(stdin);
+			scanf("%c", &opcCorreta);
+
+			if(opcCorreta== 's' || opcCorreta== 'S') loopingDia=1;
+			else loopingDia= 0;
+		}
+
+		else printf("Por favor, preencha o campo de dia e mês novamente!\n\n");
+
+	} while (!loopingDia);
+
+	if(removeMes -1 !=0) {
+		for (int i=0; i< (removeMes -1); i++) {
+			varAux+= diaMeses[i];
+		}
+
+		varAux+= removeDia -1;
+	}
+
+	else varAux= removeDia -1;
+
+	if(agendamentos[varAux]==0) {
+		printf("Não foi possível realizar a remoção, porque o dia não está preenchido.\n\n");
+		return 0;
+	}
+
+	agendamentos[varAux]--;
+	printf("Agendamento removido com sucesso!\n\n");
 
 	return 0;
 }
