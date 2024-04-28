@@ -10,6 +10,8 @@ void printInformacaoInicial();
 void estruturaCalendario();
 void mostraCalendario(int diaSemana, int diaMeses[], int diasAno[]);
 int verificaDiaMes (int dia, int mes, int diaMeses[]);
+void printDiaSeparadoBarra (int dia, int mes, int intervalo, int diaMeses[]);
+int verificaAgendamento (int qtdAgendamento);
 int inserirAgendamento(int agendamentos[], int diaMeses[]);
 
 int main() {
@@ -270,6 +272,23 @@ void printDiaSeparadoBarra (int dia, int mes, int intervalo, int diaMeses[]) {
 	}
 }
 
+int verificaAgendamento (int qtdAgendamento) {
+/*
+	Função responsável por verificar se a quantidade de agendamentos no dia
+	especificado é maior que a quantidade máxima de agendamentos ou não.
+	Caso a afirmação seja verdadeira, ou seja, o valor seja igual a quantidade
+	máxima, a função retornará 0, caso contrário, retornará 1. Parâmetros:
+	qtdAgendamento- inteiro que contém a quantidade de agendamentos que um dado
+	dia possui. O parâmetro vem do valor contido na posição de memória do vetor
+	que armazena o dia especificado, portanto, é interpretado como variável
+	inteira e não um vetor.
+*/
+
+	if(qtdAgendamento >= maxAgendamento) return 0;
+
+	return 1;
+}
+
 int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 /*
         Função responsável por inserir os agendamentos no vetor que armazena a
@@ -290,7 +309,7 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 	dias que um determinado mês possui.
 */
 
-	int diaInicio, mesInicio, duracaoTratamento, varAux=0, loopingDia=1;
+	int diaInicio, mesInicio, duracaoTratamento, varAux=0, loopingDia;
 	char opcCorreta;
 
 	do {
@@ -332,11 +351,27 @@ int inserirAgendamento(int agendamentos[], int diaMeses[]) {
 	else varAux= diaInicio -1;
 
 	for(int i=0; i< duracaoTratamento; i++) {
-		if(agendamentos[varAux] == maxAgendamento) {
-			printf("Não foi possível agendar a consulta para um dos dias selecionados\n");
+		opcCorreta= 's';
+
+		if(!verificaAgendamento(agendamentos[varAux])) {
+			int j=0;
+
+			while(verificaAgendamento(agendamentos[varAux+j])==0) j++;
+
+			printf("\n!!! Não foi possível agendar a consulta para o dia ");
+			printDiaSeparadoBarra(diaInicio, mesInicio, i, diaMeses);
+			printf(". O próximo dia com horário disponível é ");
+			printDiaSeparadoBarra(diaInicio, mesInicio, i+j, diaMeses);
+			printf(" !!!\n");
+
+			printf("Deseja agendar (ESTE DIA) na nova data?(s/n) ");
+			__fpurge(stdin);
+			scanf("%c", &opcCorreta);
+
+			if(opcCorreta== 's' || opcCorreta== 'S') varAux+= j;
 		}
 
-		else agendamentos[varAux]++;
+		if(opcCorreta== 's' || opcCorreta== 'S') agendamentos[varAux]++;
 
 		varAux++;
 	}
